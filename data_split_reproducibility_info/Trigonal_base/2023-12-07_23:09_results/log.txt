@@ -1,0 +1,317 @@
+batch_size: 256
+test_batch_size: 8192
+epochs: 1
+kl_weight: 0.05
+mse: False
+adam: True
+momentum: 0.9
+weight_decay: 0.0
+lr: 0.001
+warm_restart: True
+lr_step: 100
+gamma: 2.0
+min_lr: 1e-06
+discrim_adam: False
+discrim_momentum: 0.9
+discrim_weight_decay: 0
+discrim_lr: 0.001
+discrim_warm_restart: False
+discrim_lr_step: 1
+discrim_gamma: 0.7
+discrim_min_lr: 0.0001
+lambda_adv: 0.0
+lambda_sim: 0.0
+num_x: 5
+num_y: 5
+num_z: 5
+num_x_val: 10
+num_y_val: 10
+num_z_val: 10
+charge_data_dir: /home/gabeguo/data/crystallography_paper_version/charge_data_npy
+xrd_data_dir: /home/gabeguo/data/crystallography_paper_version/xrd_data_tensor__moka_crka
+mp_id_to_formula: /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_formulas_NO_DUPLICATES.json
+mp_id_to_lattice: /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_lattice_vectors.json
+mp_id_to_spacegroup: /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_space_groups_NO_DUPLICATES.json
+max_num_crystals: 50000
+max_num_val_crystals: 250
+same_train_val: False
+alt_train_charge_folder: ['/home/gabeguo/data/crystallography_paper_version/unstable_charge_densities']
+alt_train_xrd_folder: ['/home/gabeguo/data/crystallography_paper_version/unstable_xrd_tensor__moka_crka']
+alt_mp_id_to_formula: None
+alt_mp_id_to_lattice: None
+alt_mp_id_to_spacegroup: None
+num_channels: 1
+ignore_elemental_ratios: False
+unstandardized_formula: False
+num_excluded_elems: 0
+use_mass_ratios: False
+augmentation: True
+xrd_noise: 0.001
+formula_noise: 0.001
+xrd_shift: 3
+num_conv_blocks: 4
+num_regressor_blocks: 4
+num_formula_blocks: 3
+num_lattice_blocks: 0
+num_spacegroup_blocks: 0
+num_freq: 128
+freq_sigma: 3.0
+dropout_prob: 0.0
+num_val_trials: 2
+no_cuda: False
+dry_run: False
+seed: 1
+log_interval: 30
+val_log_interval: 10
+patience: 1500
+model_path: /home/gabeguo/data/crystallography_paper_version/dummy/DUMMY_UNUSED.pt
+results_folder: /home/gabeguo/data/crystallography_paper_version/new_results/data_split_reproducibility_info/Trigonal_base
+pretrained: None
+wandb_project: None
+
+ChargeDensityRegressor(
+  (position_embedder): PositionEmbedder(
+    (freq): Linear(in_features=3, out_features=128, bias=True)
+    (layers): Sequential(
+      (0): Linear(in_features=256, out_features=512, bias=True)
+      (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU()
+      (3): Linear(in_features=512, out_features=512, bias=True)
+    )
+  )
+  (diffraction_embedder_mean): DiffractionPatternEmbedder(
+    (first_conv): Sequential(
+      (0): Conv1d(1, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+      (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+      (2): ReLU()
+    )
+    (conv_blocks_1): ModuleList(
+      (0): Sequential(
+        (0): Conv1d(8, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (1): Sequential(
+        (0): Conv1d(16, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (2): Sequential(
+        (0): Conv1d(24, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (3): Sequential(
+        (0): Conv1d(32, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+    )
+    (transition): Sequential(
+      (0): Conv1d(40, 16, kernel_size=(1,), stride=(1,), bias=False)
+      (1): LayerNorm((16, 1024), eps=1e-05, elementwise_affine=True)
+      (2): ReLU()
+      (3): AvgPool1d(kernel_size=(2,), stride=(2,), padding=(0,))
+    )
+    (conv_blocks_2): ModuleList(
+      (0): Sequential(
+        (0): Conv1d(16, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (1): Sequential(
+        (0): Conv1d(24, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (2): Sequential(
+        (0): Conv1d(32, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (3): Sequential(
+        (0): Conv1d(40, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+    )
+    (lastfc): Sequential(
+      (0): Conv1d(48, 1, kernel_size=(1,), stride=(1,))
+      (1): Flatten(start_dim=1, end_dim=-1)
+      (2): Linear(in_features=512, out_features=512, bias=True)
+      (3): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (diffraction_embedder_std): DiffractionPatternEmbedder(
+    (first_conv): Sequential(
+      (0): Conv1d(1, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+      (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+      (2): ReLU()
+    )
+    (conv_blocks_1): ModuleList(
+      (0): Sequential(
+        (0): Conv1d(8, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (1): Sequential(
+        (0): Conv1d(16, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (2): Sequential(
+        (0): Conv1d(24, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (3): Sequential(
+        (0): Conv1d(32, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 1024), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+    )
+    (transition): Sequential(
+      (0): Conv1d(40, 16, kernel_size=(1,), stride=(1,), bias=False)
+      (1): LayerNorm((16, 1024), eps=1e-05, elementwise_affine=True)
+      (2): ReLU()
+      (3): AvgPool1d(kernel_size=(2,), stride=(2,), padding=(0,))
+    )
+    (conv_blocks_2): ModuleList(
+      (0): Sequential(
+        (0): Conv1d(16, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (1): Sequential(
+        (0): Conv1d(24, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (2): Sequential(
+        (0): Conv1d(32, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+      (3): Sequential(
+        (0): Conv1d(40, 8, kernel_size=(3,), stride=(1,), padding=(1,), bias=False)
+        (1): LayerNorm((8, 512), eps=1e-05, elementwise_affine=True)
+        (2): ReLU()
+      )
+    )
+    (lastfc): Sequential(
+      (0): Conv1d(48, 1, kernel_size=(1,), stride=(1,))
+      (1): Flatten(start_dim=1, end_dim=-1)
+      (2): Linear(in_features=512, out_features=512, bias=True)
+      (3): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (formula_embedder_mean): FormulaEmbedder(
+    (initfc): Sequential(
+      (0): Linear(in_features=119, out_features=512, bias=True)
+      (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (layers): ModuleList(
+      (0-1): 2 x Sequential(
+        (0): ReLU()
+        (1): Linear(in_features=512, out_features=512, bias=True)
+        (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+  )
+  (formula_embedder_std): FormulaEmbedder(
+    (initfc): Sequential(
+      (0): Linear(in_features=119, out_features=512, bias=True)
+      (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (layers): ModuleList(
+      (0-1): 2 x Sequential(
+        (0): ReLU()
+        (1): Linear(in_features=512, out_features=512, bias=True)
+        (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+  )
+  (lattice_embedder): LatticeEmbedder()
+  (spacegroup_embedder): SpaceGroupEmbedder()
+  (film_scale): Sequential(
+    (0): Linear(in_features=1024, out_features=1024, bias=True)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Linear(in_features=1024, out_features=1024, bias=True)
+    (4): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU()
+    (6): Linear(in_features=1024, out_features=1024, bias=True)
+    (7): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Linear(in_features=1024, out_features=512, bias=True)
+    (10): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (11): ReLU()
+  )
+  (film_bias): Sequential(
+    (0): Linear(in_features=1024, out_features=1024, bias=True)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Linear(in_features=1024, out_features=1024, bias=True)
+    (4): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU()
+    (6): Linear(in_features=1024, out_features=1024, bias=True)
+    (7): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+    (9): Linear(in_features=1024, out_features=512, bias=True)
+    (10): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (11): ReLU()
+  )
+  (initfc): Sequential(
+    (0): Linear(in_features=512, out_features=512, bias=True)
+    (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Sequential(
+      (0): Dropout(p=0.0, inplace=False)
+      (1): Linear(in_features=512, out_features=512, bias=True)
+      (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): ReLU()
+    )
+    (4): Sequential(
+      (0): Dropout(p=0.0, inplace=False)
+      (1): Linear(in_features=512, out_features=512, bias=True)
+      (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): ReLU()
+    )
+    (5): Sequential(
+      (0): Dropout(p=0.0, inplace=False)
+      (1): Linear(in_features=512, out_features=512, bias=True)
+      (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): ReLU()
+    )
+  )
+  (middle_blocks): ModuleList(
+    (0-2): 3 x Sequential(
+      (0): Dropout(p=0.0, inplace=False)
+      (1): Linear(in_features=1024, out_features=512, bias=True)
+      (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): ReLU()
+      (4): Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=512, out_features=512, bias=True)
+        (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU()
+      )
+      (5): Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=512, out_features=512, bias=True)
+        (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU()
+      )
+      (6): Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=512, out_features=512, bias=True)
+        (2): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU()
+      )
+    )
+  )
+  (lastfc): Linear(in_features=512, out_features=1, bias=True)
+)
+
+best ssim = 0.0874 @ epoch 1
+stopped at epoch 1

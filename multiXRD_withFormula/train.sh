@@ -1,0 +1,59 @@
+python3 train_loop.py \
+    --num_x 9 \
+    --num_y 9 \
+    --num_z 9 \
+    --num_x_val 25 \
+    --num_y_val 25 \
+    --num_z_val 25 \
+    --patience 1500 \
+    --log_interval 30 \
+    --val_log_interval 10 \
+    --batch_size 128 \
+    --test_batch_size 8192 \
+    --adam \
+    --warm_restart \
+    --lr 1e-3 \
+    --min_lr 1e-6 \
+    --momentum 0.9 \
+    --weight_decay 0 \
+    --gamma 2 \
+    --lr_step 100 \
+    --discrim_adam \
+    --discrim_warm_restart \
+    --discrim_lr 1e-4 \
+    --discrim_min_lr 1e-8 \
+    --discrim_momentum 0.9 \
+    --discrim_weight_decay 0 \
+    --discrim_gamma 2 \
+    --discrim_lr_step 100 \
+    --lambda_adv 0.1 \
+    --lambda_sim 0 \
+    --latent_sigma 1e6 \
+    --augmentation \
+    --xrd_noise 1e-3 \
+    --xrd_shift 3 \
+    --formula_noise 1e-3 \
+    --max_num_crystals 50000 \
+    --max_num_val_crystals 250 \
+    --charge_data_dir /home/gabeguo/data/crystallography_paper_version/charge_data_npy \
+    --xrd_data_dir /home/gabeguo/data/crystallography_paper_version/xrd_data_tensor__moka_crka \
+    --alt_train_charge_folder /home/gabeguo/data/crystallography_paper_version/unstable_charge_densities \
+    --alt_train_xrd_folder /home/gabeguo/data/crystallography_paper_version/unstable_xrd_tensor__moka_crka \
+    --model_path /home/gabeguo/data/crystallography_dev/models/v53_weakDiscriminator.pt \
+    --epochs 1500 \
+    --num_channels 1 \
+    --num_conv_blocks 4 \
+    --num_regressor_blocks 4 \
+    --num_formula_blocks 3 \
+    --num_lattice_blocks 0 \
+    --num_spacegroup_blocks 0 \
+    --num_freq 128 \
+    --freq_sigma 3 \
+    --dropout_prob 0 \
+    --results_folder /home/gabeguo/data/crystallography_dev/run_logs \
+    --mp_id_to_formula /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_formulas.json \
+    --mp_id_to_lattice /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_lattice_vectors.json \
+    --mp_id_to_spacegroup /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_space_groups.json \
+    --num_val_trials 2 \
+    --kl_weight 0.05 \
+    --wandb_project crystallography_dev

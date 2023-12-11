@@ -1,0 +1,31 @@
+CUDA_VISIBLE_DEVICES=2 python3 train_loop.py \
+    --num_x 5 \
+    --num_y 5 \
+    --num_z 5 \
+    --num_x_val 5 \
+    --num_y_val 5 \
+    --num_z_val 5 \
+    --patience 1000 \
+    --log_interval 400 \
+    --val_log_interval 50 \
+    --batch_size 16384 \
+    --test_batch_size 16384 \
+    --warm_restart \
+    --lr 5e-4 \
+    --min_lr 1e-8 \
+    --gamma 2 \
+    --lr_step 10 \
+    --max_num_crystals 10000 \
+    --max_num_val_crystals 25 \
+    --n_bins 10 \
+    --uniform_charge_sample_prob 0.05 \
+    --data_dir ~/data/crystallography/charge_data_npy \
+    --model_path ~/data/crystallography/models/charge_density_net_V49_MSELoss.pt \
+    --epochs 1000 \
+    --model 'dense' \
+    --single_skip \
+    --double_skip \
+    --num_blocks 8 \
+    --num_freq 5 \
+    --results_folder ~/data/crystallography/run_logs \
+    --wandb_project crystallography_100_separate_val

@@ -1,0 +1,23 @@
+python3 new_visualize_predictions.py \
+    --num_x 50 \
+    --num_y 50 \
+    --num_z 50 \
+    --model_path /home/gabeguo/data/crystallography_dev/models/v43_KLD_LayerNorm_OneChannel.pt \
+    --charge_data_dir /home/gabeguo/data/crystallography_paper_version/charge_data_npy/test \
+    --xrd_data_dir /home/gabeguo/data/crystallography_paper_version/xrd_data_tensor__moka_crka/test \
+    --mp_id_to_formula /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_formulas.json \
+    --mp_id_to_lattice /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_lattice_vectors.json \
+    --mp_id_to_spacegroup /home/gabeguo/data/crystallography_paper_version/crystal_systems_all/Trigonal_space_groups.json \
+    --max_num_crystals 250 \
+    --num_channels 1 \
+    --num_conv_blocks 4 \
+    --num_formula_blocks 3 \
+    --num_lattice_blocks 0 \
+    --num_spacegroup_blocks 0 \
+    --num_regressor_blocks 4 \
+    --num_freq 128 \
+    --dropout_prob 0 \
+    --test_all_rotations \
+    --num_trials 8 \
+    --results_folder /home/gabeguo/data/crystallography_dev/results/v43_8Trials
+#   --display
