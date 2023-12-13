@@ -7,16 +7,14 @@ mp_pyrho==0.3.0
 nibabel==5.1.0
 numpy==1.26.2
 pandas==2.0.0
-Pillow==9.5.0
 Pillow==10.1.0
 plotly==5.14.1
 pymatgen==2023.11.12
 pymatgen_analysis_diffusion==2022.7.21
 PyRhO==0.9.4
-pytorch3d==0.7.5
 scipy==1.11.4
 setuptools==67.6.1
-skimage==0.0
+scikit-image==0.22.0
 torch==2.0.0
 torchvision==0.15.1
 torchviz==0.0.2
