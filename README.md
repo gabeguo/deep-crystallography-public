@@ -25,6 +25,13 @@ cd download_data
 bash download_data.sh
 ```
 
+### Obtain Stable Crystals
+
+```
+cd download_data
+bash record_stable_chemical_info.sh
+```
+
 ### Data Split to Train, Val, Test
 
 ```
