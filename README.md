@@ -54,7 +54,7 @@ bash remove_duplicate_materials.sh
 
 ### Splits
 
-For reproducibility, we supply the mpids of all the crystals used in training, validation, and testing in [data_split_reproducibility_info](data_split_reproducibility_info). Our own attempts to replicate the study indicate that the Materials Project dataset adds and removes some materials over time &mdash; thus, results may vary from what is listed in the paper.
+Our own attempts to replicate the study indicate that the Materials Project dataset adds and removes some materials over time &mdash; thus, results may vary from what is listed in the paper. For reproducibility, we supply the mpids of all the crystals used in training, validation, and testing in [data_split_reproducibility_info](data_split_reproducibility_info). 
 
 ## Training Model
 
