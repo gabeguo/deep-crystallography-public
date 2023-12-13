@@ -27,13 +27,10 @@ bash download_data.sh
 
 ### Data Split to Train, Val, Test
 
-*Something like this:*
 ```
-cd prelim_experiments/test_charge_interpolation
-python split_dataset.py
+cd download_data
+bash run_split_dataset.sh
 ```
-
-*Gabe TBD*
 
 ### Get Formula, Crystal System, and Spacegroup Info
 
@@ -50,10 +47,6 @@ bash remove_duplicate_materials.sh
 
 ### Splits
 See [data_split_reproducibility_info](data_split_reproducibility_info).
-
-### Our Version
-
-Our processed version of the data will be released on **TBD**. *(Gabe todo.)* 
 
 ## Training Model
 
