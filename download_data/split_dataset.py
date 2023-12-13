@@ -2,6 +2,7 @@ import os
 import argparse
 import shutil
 import random
+import json
 
 import sys
 sys.path.append('../../')
@@ -45,23 +46,31 @@ def find_xrd_filepath_from_mp(mp_id, xrd_filepaths):
 """
 Returns:
 -TRAIN, VAL, or TEST depending on args.train_percent, args.val_percent, args.test_percent
+-By default, all unstable elements go into TRAIN
 """
-def get_data_split_category(args):
+def get_data_split_category(args, stable):
     the_num = random.random() * 100
-    if the_num < args.train_percent:
+    if the_num < args.train_percent or (not stable):
         return TRAIN
     if the_num < args.train_percent + args.val_percent:
         return VAL
     return TEST
 
 """
+Checks if mp_id is a key in the dict of stable_elems (which is mp_id to formula)
+"""
+def is_stable(mp_id, stable_elems):
+    return mp_id in stable_elems
+
+"""
 Moves the data in charge_path and xrd_path to a new filepath.
 Assigns it to train, test, val with probability,
 dictated by args.train_percent, args.val_percent, args.test_percent.
+Note that all unstable elements are automatically in train.
 Only does it for one at a time (not list).
 """
-def move_data_to_new_dest(args, charge_path, xrd_path):
-    data_split_category = get_data_split_category(args)
+def move_data_to_new_dest(args, charge_path, xrd_path, stable_elems):
+    data_split_category = get_data_split_category(args, stable=is_stable(get_mp_id(charge_path), stable_elems))
     for (orig_path, new_dir) in zip([charge_path, xrd_path], [args.charge_data_dst, args.xrd_data_dst]):
         fname = orig_path.split('/')[-1]
         assert '.' in fname
@@ -94,6 +103,9 @@ def split_data(args):
                     for (root, dirs, files) in os.walk(args.xrd_data_src) \
                     for filename in files \
                     if '.pt' in filename and '_mp-' in filename}
+    # log stable elems (key: mpid, val: formula)
+    with open(args.stable_elems, 'r') as fin:
+        stable_elems = json.load(fin)
     # loop through charge data
     count_used = 0
     total_count = 0
@@ -110,7 +122,8 @@ def split_data(args):
                 exclusions.append(charge_filepath)
                 continue
             # move the data to new destination
-            move_data_to_new_dest(args=args, charge_path=charge_filepath, xrd_path=xrd_filepath)
+            move_data_to_new_dest(args=args, charge_path=charge_filepath, 
+                                  xrd_path=xrd_filepath, stable_elems=stable_elems)
             count_used += 1
     # print exclusions & usage
     exclusion_filepath = os.path.join(args.charge_data_dst, 'excluded_IDs.txt')
@@ -132,10 +145,12 @@ def main():
                         help='where is the charge data going to be moved')
     parser.add_argument('--xrd_data_dst', type=str, default='/home/gabeguo/data/replicate_crystallography/trigonal_split/xrds', metavar='XDD',
                         help='where is the XRD data going to be moved')
+    parser.add_argument('--stable_elems', type=str, default='/home/gabeguo/data/replicate_crystallography/STABLE_material_info/Trigonal_formulas.json',
+                        help='filepath to json containing all the stable elements as keys (values are irrelevant)')
     parser.add_argument('--train_percent', type=int, default=80, metavar='TrP',
-                        help='percentage of data used for training')
+                        help='percentage of stable data used for training (all unstable forced to train)')
     parser.add_argument('--val_percent', type=int, default=10, metavar='VP',
-                        help='percentage of data used for validation')
+                        help='percentage of stable data used for validation (all unstable forced to train)')
     args = parser.parse_args()
 
     # remove trailing slash
