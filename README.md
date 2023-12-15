@@ -19,28 +19,28 @@ pip install -r requirements.txt
 ### Source
 Data can be downloaded from the [Materials Project](https://next-gen.materialsproject.org/materials).
 
- Also need to change API_KEY in `download_charge_densities.py`.
+Also need to change API_KEY in `download_charge_densities.py`.
 ```
 cd download_data
 bash download_data.sh
 ```
 
 ### Obtain Stable Crystals
-
 ```
 cd download_data
 bash record_stable_chemical_info.sh
 ```
 
 ### Data Split to Train, Val, Test
-
+You may edit the `seed` argument if you like, in `run_split_dataset.sh`.
 ```
 cd download_data
 bash run_split_dataset.sh
 ```
 
-### Get Formula, Crystal System, and Spacegroup Info
+*Note:* Our own attempts to replicate the study indicate that the Materials Project dataset adds and removes some materials over time &mdash; thus, results may vary slightly from what is listed in the paper. For reproducibility, we supply the mpids of all the crystals used in training, validation, and testing in [data_split_reproducibility_info](data_split_reproducibility_info). 
 
+### Get Formula, Crystal System, and Spacegroup Info
 ```
 cd download_data
 bash record_chemical_aux_info.sh
@@ -52,23 +52,17 @@ cd download_data
 bash remove_duplicate_materials.sh
 ```
 
-### Splits
-
-Our own attempts to replicate the study indicate that the Materials Project dataset adds and removes some materials over time &mdash; thus, results may vary from what is listed in the paper. For reproducibility, we supply the mpids of all the crystals used in training, validation, and testing in [data_split_reproducibility_info](data_split_reproducibility_info). 
-
 ## Training Model
-
 ```
 cd multiXRD_withFormula/new_experimental_scripts
-CUDA_VISIBLE_DEVICES=x train_base_model.sh
-CUDA_VISIBLE_DEVICES=x train_formula_ablation.sh
+CUDA_VISIBLE_DEVICES=x bash train_base_model.sh
+CUDA_VISIBLE_DEVICES=x bash train_formula_ablation.sh
 ```
 
 ## Testing Model
-
 ```
 cd multiXRD_withFormula/new_experimental_scripts
-CUDA_VISIBLE_DEVICES=x test_base_model.sh
-CUDA_VISIBLE_DEVICES=x test_formula_ablation.sh
+CUDA_VISIBLE_DEVICES=x bash test_base_model.sh
+CUDA_VISIBLE_DEVICES=x bash test_formula_ablation.sh
 ```
 
