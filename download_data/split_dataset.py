@@ -109,7 +109,7 @@ def split_data(args):
     # loop through charge data
     count_used = 0
     total_count = 0
-    for root, _, files in os.walk(args.charge_data_src):
+    for root, _, files in [the_tuple for the_tuple in os.walk(args.charge_data_src)]:
         for filename in files:
             if '.npy' not in filename or 'mp' not in filename:
                 continue
@@ -151,7 +151,12 @@ def main():
                         help='percentage of stable data used for training (all unstable forced to train)')
     parser.add_argument('--val_percent', type=int, default=10, metavar='VP',
                         help='percentage of stable data used for validation (all unstable forced to train)')
+    parser.add_argument('--seed', type=int, default=0,
+                        help='seed for random number generation')
     args = parser.parse_args()
+
+    # set seed for reproducibility
+    random.seed(args.seed)
 
     # remove trailing slash
     if args.charge_data_src[-1] == '/':
