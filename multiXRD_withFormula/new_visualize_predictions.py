@@ -27,6 +27,43 @@ import argparse
 from tqdm import tqdm
 from datetime import datetime
 
+def plot_three_cross_sections(density_map, min_val, max_val, name='charge_map.png'):
+    for slice_dim in ['x', 'y', 'z']:
+        plot_cross_sections(density_map=density_map, 
+                            min_val=min_val, max_val=max_val,
+                            name=name, slice_dim=slice_dim, slice_pos=25)
+    return
+
+def plot_cross_sections(density_map, min_val, max_val, name='charge_map.png', slice_dim='z', slice_pos=25):
+    name_base = name.split('.')[0]
+
+    if slice_dim == 'x':
+        cross_section = density_map[slice_pos,:,:]
+    elif slice_dim == 'y':
+        cross_section = density_map[:,slice_pos,:]
+    elif slice_dim == 'z':
+        cross_section = density_map[:,:,slice_pos]
+    else:
+        raise ValueError('invalid slice dim')
+
+    X_cross = list()
+    Y_cross = list()
+    densities = list()
+    for x in range(cross_section.shape[0]):
+        for y in range(cross_section.shape[1]):
+            X_cross.append(x)
+            Y_cross.append(y)
+            densities.append(cross_section[x, y])
+    plt.figure(figsize=(8,8))
+    plt.scatter(x=X_cross, y=Y_cross, c=densities, 
+                marker='s', s=49, 
+                vmin=min_val, vmax=max_val,
+                linewidth=0, cmap='jet')
+    plt.gca().set_aspect('equal')
+    plt.title(f'Cross-Section {slice_dim} = {slice_pos}')
+    plt.savefig(f'{name_base}_crossSection{slice_dim}_{slice_pos}.png')
+    plt.close()
+
 """
 Saves a visualization of the charge density map
 """
@@ -327,6 +364,8 @@ def evaluate(model, test_loader, device, args):
             # plot gt crystal
             plot_charge_density(gt_crystal, range=(gt_crystal.min(), gt_crystal.max()), name=os.path.join(curr_results_folder, '{}_{}_gt.png'.format(molecular_id, molecular_formula)), 
                 is_ground_truth=True, popup=args.display, multiple_camera_angles=args.multiple_camera_angles)
+            plot_three_cross_sections(density_map=gt_crystal, min_val=gt_crystal.min(), max_val=gt_crystal.max(), 
+                                      name=os.path.join(curr_results_folder, '{}_{}_gt.png'.format(molecular_id, molecular_formula)))
 
             # calculate embeddings first
             if args.num_channels > 0 and args.num_conv_blocks > 0:
@@ -382,6 +421,8 @@ def evaluate(model, test_loader, device, args):
                 # generate vis
                 plot_charge_density(pred_crystal, range=(gt_crystal.min(), gt_crystal.max()), name=os.path.join(curr_results_folder, '{}_{}_pred_{}.png'.format(molecular_id, molecular_formula, trial_num)), 
                     is_ground_truth=False, popup=args.display, multiple_camera_angles=args.multiple_camera_angles)
+                plot_three_cross_sections(density_map=pred_crystal, min_val=gt_crystal.min(), max_val=gt_crystal.max(), 
+                    name=os.path.join(curr_results_folder, '{}_{}_pred_{}.png'.format(molecular_id, molecular_formula, trial_num)))
 
                 # calculate metrics
                 # ssim & psnr
