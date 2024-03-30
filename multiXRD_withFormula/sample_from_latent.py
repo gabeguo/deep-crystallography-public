@@ -79,7 +79,9 @@ def plot_charge_density(density_map, the_range=(0, 1), name='charge_map.png',
             densities.append(cross_section[x, y])
     plt.figure(figsize=(8,8))
     plt.scatter(x=X_cross, y=Y_cross, c=densities, 
-                marker='s', s=49, linewidth=0, cmap='jet')
+                marker='s', s=49, 
+                vmin=density_map.min(), vmax=density_map.max(),
+                linewidth=0, cmap='jet')
     plt.gca().set_aspect('equal')
     plt.savefig(f'{name_base}_crossSection{selected_z}.png')
     plt.close()
