@@ -27,7 +27,7 @@ from datetime import datetime
 """
 Saves a visualization of the charge density map
 """
-def plot_charge_density(density_map, range=(0, 1), name='charge_map.png', 
+def plot_charge_density(density_map, the_range=(0, 1), name='charge_map.png', 
                         is_ground_truth=False, popup=False, multiple_camera_angles=False):
     X, Y, Z = np.mgrid[0:density_map.shape[0], 0:density_map.shape[1], 0:density_map.shape[2]]
 
@@ -36,8 +36,8 @@ def plot_charge_density(density_map, range=(0, 1), name='charge_map.png',
         y=Y.flatten(),
         z=Z.flatten(),
         value=density_map.flatten(),
-        isomin=range[0],
-        isomax=range[1],
+        isomin=the_range[0],
+        isomax=the_range[1],
         opacity=0.8, # max opacity
         opacityscale=[(x, np.cbrt(x)) for x in np.linspace(start=0, stop=1, num=25)],
         surface_count=25, 
@@ -63,6 +63,27 @@ def plot_charge_density(density_map, range=(0, 1), name='charge_map.png',
         if popup:
             fig.show()
 
+    # Cross section
+    fig.data = []
+    fig.layout = {}
+
+    selected_z = 25
+    cross_section = density_map[:,:,selected_z]
+    X_cross = list()
+    Y_cross = list()
+    densities = list()
+    for x in range(cross_section.shape[0]):
+        for y in range(cross_section.shape[1]):
+            X_cross.append(x)
+            Y_cross.append(y)
+            densities.append(cross_section[x, y])
+    plt.figure(figsize=(8,8))
+    plt.scatter(x=X_cross, y=Y_cross, c=densities, 
+                marker='s', s=49, linewidth=0, cmap='jet')
+    plt.gca().set_aspect('equal')
+    plt.savefig(f'{name_base}_crossSection{selected_z}.png')
+    plt.close()
+    
     print('\tvalues {}:'.format('ground truth' if is_ground_truth else 'predicted'), 
           '\n\t\tmean:', np.mean(density_map), '\n\t\tstd:', np.std(density_map))
 
@@ -177,8 +198,10 @@ def evaluate(model, test_loader, device, args):
                 pred_crystal = np.zeros((args.num_x, args.num_y, args.num_z))
                 pred_crystal[grid_pos[:,0], grid_pos[:,1], grid_pos[:,2]] = pred_charges#.cpu().numpy()
 
+                
+
                 # generate vis
-                plot_charge_density(pred_crystal, range=(pred_crystal.min(), pred_crystal.max()), name=os.path.join(curr_results_folder, f'pred_{trial_num}.png'), 
+                plot_charge_density(pred_crystal, the_range=(pred_crystal.min(), pred_crystal.max()), name=os.path.join(curr_results_folder, f'pred_{trial_num}.png'), 
                     is_ground_truth=True, popup=args.display, multiple_camera_angles=args.multiple_camera_angles)
             
             break
