@@ -252,6 +252,8 @@ def evaluate(model, test_loader, device, args):
     all_mpid_to_formula = dict()
 
     with torch.no_grad():
+        std_ssims = list()
+        std_psnrs = list()
         for idx, the_tuple in enumerate(tqdm(test_loader)):
             given_xrd_pattern, chemical_formula, lattice_vector, spacegroup_vector, pos, charge_at_pos = the_tuple
             # put inputs to device
@@ -340,6 +342,8 @@ def evaluate(model, test_loader, device, args):
             # take a few random samples
             best_ssim = -1
             best_psnr = -1
+            ssim_by_sample = list()
+            psnr_by_sample = list()
             for trial_num in range(args.num_trials):
                 if args.num_conv_blocks > 0:
                     # random sample XRD embedding
@@ -392,14 +396,16 @@ def evaluate(model, test_loader, device, args):
                     curr_psnr = psnr(image_true=gt_crystal, image_test=pred_crystal, data_range=gt_crystal.max() - gt_crystal.min())
                 best_ssim = max(curr_ssim, best_ssim)
                 best_psnr = max(curr_psnr, best_psnr)
+                ssim_by_sample.append(curr_ssim)
+                psnr_by_sample.append(curr_psnr)
 
             # log metrics (coarse-grained)
             # ssim
-            print('\t\tssim: {}'.format(best_ssim))
+            print('\tssim: {}'.format(best_ssim))
             all_ssim.append(best_ssim)
             mpid_to_ssim[molecular_id] = best_ssim
             # psnr
-            print('\t\tpsnr: {}'.format(best_psnr))
+            print('\tpsnr: {}'.format(best_psnr))
             all_psnr.append(best_psnr)
             mpid_to_psnr[molecular_id] = best_psnr
 
@@ -414,6 +420,12 @@ def evaluate(model, test_loader, device, args):
             # log by spacegroup
             ssim_by_spacegroup[spacegroup_num].append(best_ssim)
             psnr_by_spacegroup[spacegroup_num].append(best_psnr)
+            # log stds
+            std_ssims.append(np.std(ssim_by_sample))
+            std_psnrs.append(np.std(psnr_by_sample))
+
+            print('\tstd ssim over samples:', std_ssims[-1])
+            print('\tstd psnr over samples:', std_psnrs[-1])
     
     # calculate summary statistics (coarse-grained)
     avg_ssim = np.mean(all_ssim)
@@ -438,6 +450,8 @@ def evaluate(model, test_loader, device, args):
         'std ssim':round(std_ssim, 4),
         'avg psnr':round(avg_psnr, 2),
         'std psnr':round(std_psnr, 2),
+        'std ssim over samples':round(np.mean(std_ssims), 4),
+        'std psnr over samples':round(np.mean(std_psnrs), 4),
         'crystals':all_mpid_to_formula,
         'ssim by crystal':mpid_to_ssim,
         'psnr by crystal':mpid_to_psnr,
@@ -571,6 +585,9 @@ def main():
                 num_freq=args.num_freq, sigma=0, dropout_prob=args.dropout_prob).to(device)    
     model.load_state_dict(torch.load(args.model_path))
     model.eval()
+
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f'model has {total_params} parameters')
 
     evaluate(model, test_loader, device, args)
 
