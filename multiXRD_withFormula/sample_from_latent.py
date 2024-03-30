@@ -84,6 +84,7 @@ def plot_charge_density(density_map, the_range=(0, 1), name='charge_map.png',
                 linewidth=0, cmap='jet')
     plt.gca().set_aspect('equal')
     plt.savefig(f'{name_base}_crossSection{selected_z}.png')
+    plt.title('Horizontal Cross-Section')
     plt.close()
     
     print('\tvalues {}:'.format('ground truth' if is_ground_truth else 'predicted'), 
