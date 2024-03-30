@@ -83,7 +83,7 @@ def plot_charge_density(density_map, the_range=(0, 1), name='charge_map.png',
                 vmin=density_map.min(), vmax=density_map.max(),
                 linewidth=0, cmap='jet')
     plt.gca().set_aspect('equal')
-    plt.title('Horizontal Cross-Section')
+    plt.title(f'Cross-Section z = {selected_z}')
     plt.savefig(f'{name_base}_crossSection{selected_z}.png')
     plt.close()
     
