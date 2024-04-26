@@ -1,5 +1,5 @@
 # Deep Powder Crystallography
-Source code to accompany our upcoming paper, *Towards End-to-End Electron Density Field Generation for Powder Crystallography: A Deep Learning Approach* by Gabe Guo, Judah Goldfeder, Ling Lan, Aniv Ray, Albert Hanming Yang, Boyuan Chen, Simon JL Billinge, Hod Lipson.
+Source code to accompany our upcoming paper, *Towards End-to-End Structure Determination from X-Ray Diffraction Data Using Deep Learning* by Gabe Guo, Judah Goldfeder, Ling Lan, Aniv Ray, Albert Hanming Yang, Boyuan Chen, Simon JL Billinge, Hod Lipson.
 
 ## Project Objective
 Given x-ray diffraction pattern and partial chemical composition information, reconstruct 3D electron density function. AKA crystallography.
